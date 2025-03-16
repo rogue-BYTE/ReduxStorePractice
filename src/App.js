@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { increment, decrement } from './store/actions/counter.actions';
+import { fetchUser } from './store/actions/user.actions';
 
+import { useEffect } from 'react';
 function App() {
+  const count = useSelector(state => state.counter.count);
+  const user = useSelector(state => state.user.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUser(count));
+  }, [dispatch, count]);
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        Count: { count }
+        <button onClick={() => dispatch(increment())}>Increment</button>
+        <button onClick={() => dispatch(decrement())}>Decrement</button>
       </header>
+      <h1>User data</h1>
+      { user && <div>
+        <p>Name: { user.name }</p>
+        <p>Email: { user.email }</p>
+      </div> }
     </div>
   );
 }
